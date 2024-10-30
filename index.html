@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+        }
+        #info {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0 0 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>Network Information</h1>
+        <p><strong>SSID:</strong> <span id="ssid">Loading...</span></p>
+        <p><strong>Password:</strong> <span id="password">Loading...</span></p>
+        <p><strong>IP Address:</strong> <span id="ip_address">Loading...</span></p>
+    </div>
+
+    <script>
+        async function fetchNetworkInfo() {
+            try {
+                // Uppdatera fetch-anropet till ngrok-URL:en
+                const response = await fetch("https://230b-213-103-152-71.ngrok-free.app/api/network_info"); 
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                
+                // Kontrollera om svaret är HTML istället för JSON
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("text/html")) {
+                    throw new Error("Received HTML instead of JSON. Check ngrok URL or server.");
+                }
+
+                const data = await response.json();
+                document.getElementById("ssid").textContent = data.ssid;
+                document.getElementById("password").textContent = data.password;
+                document.getElementById("ip_address").textContent = data.ip_address;
+            } catch (error) {
+                console.error("Error fetching network info:", error);
+                document.getElementById("ssid").textContent = "Error";
+                document.getElementById("password").textContent = "Error";
+                document.getElementById("ip_address").textContent = "Error";
+            }
+        }
+
+        window.onload = fetchNetworkInfo;
+    </script>
+</body>
+</html>
