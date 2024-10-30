@@ -43,7 +43,7 @@
         async function fetchNetworkInfo() {
             try {
                 // Byt till din backend-adress, t.ex., "http://192.168.1.x:5000/api/network_info"
-                const response = await fetch("http://localhost:5000/api/network_info"); 
+                const response = await fetch("http://192.168.1.144:5000/api/network_info"); 
                 const data = await response.json();
                 document.getElementById("ssid").textContent = data.ssid;
                 document.getElementById("password").textContent = data.password;
